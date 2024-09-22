@@ -9,3 +9,51 @@ Este proyecto es un primer acercamiento al desarrollo frontend utilizando React 
 - **Frontend**:
   - [React](https://reactjs.org/) con [TypeScript](https://www.typescriptlang.org/)
   - [Tailwind CSS](https://tailwindcss.com/)
+
+## Correr el proyecto
+
+- Clonar el repositorio:
+
+```bash
+git clone https://github.com/garistizabal/proyecto-frontend.git
+```
+
+### 1. Instalar las dependencias
+
+Usando npm:
+
+```bash
+npm install
+```
+
+Usando yarn:
+
+```bash
+yarn install
+```
+
+Usando pnpm:
+
+```bash
+pnpm install
+```
+
+### 2. Iniciar el servidor de desarrollo
+
+Usando npm:
+
+```bash
+npm run dev
+```
+
+Usando yarn:
+
+```bash
+yarn dev
+```
+
+Usando pnpm:
+
+```bash
+pnpm dev
+```
