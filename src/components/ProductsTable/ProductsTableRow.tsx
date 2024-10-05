@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import type { Product } from '@/interfaces/product.interfaces';
 import { MdDelete, MdEdit } from 'react-icons/md';
+import { useDeleteProduct } from '@/hooks/useDeleteProduct';
 
 interface Props {
   product: Product;
@@ -9,8 +10,14 @@ interface Props {
 }
 
 export const ProductsTableRow: React.FC<Props> = ({ product, showActions }) => {
+  const navigate = useNavigate();
+
+  const { isDeletingProduct, onDeleteProduct } = useDeleteProduct();
+
   const handleDelete = async () => {
-    console.log(`deleting ${product.id}`);
+    await onDeleteProduct(product.id);
+
+    navigate('/');
   };
 
   return (
@@ -32,6 +39,7 @@ export const ProductsTableRow: React.FC<Props> = ({ product, showActions }) => {
           </Link>
           <button
             onClick={handleDelete}
+            disabled={isDeletingProduct}
             className="inline-block px-4 py-2 text-xs font-medium text-indigo-600 transition-all bg-white border border-indigo-600 rounded hover:bg-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <MdDelete className="size-6" />

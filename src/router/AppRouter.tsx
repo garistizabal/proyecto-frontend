@@ -10,24 +10,34 @@ import NewProductPage from '@/pages/NewProductPage';
 import EditProductPage from '@/pages/EditProductPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 
+import PublicRoutes from './PublicRoutes';
+import PrivateRoutes from './PrivateRoutes';
+import AdminRoutes from './AdminRoutes';
+
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
         {/* Public Routes */}
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+        <Route element={<PublicRoutes />}>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
         </Route>
 
         {/* Private Routes */}
-        <Route element={<MainLayout />}>
-          <Route path="/products" element={<ProductsPage />} />
+        <Route element={<PrivateRoutes />}>
+          <Route element={<MainLayout />}>
+            <Route path="/products" element={<ProductsPage />} />
 
-          {/* Admin Routes */}
-          <Route path="/products/new" element={<NewProductPage />} />
-          <Route path="/products/edit/:id" element={<EditProductPage />} />
+            {/* Admin Routes */}
+            <Route element={<AdminRoutes />}>
+              <Route path="/products/new" element={<NewProductPage />} />
+              <Route path="/products/edit/:id" element={<EditProductPage />} />
+            </Route>
+          </Route>
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

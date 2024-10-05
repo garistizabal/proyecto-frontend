@@ -1,3 +1,8 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { LoadingSpinner } from './LoadingSpinner';
+import { useSaveProduct } from '@/hooks/useSaveProduct';
 import type { Product } from '@/interfaces/product.interfaces';
 
 interface Props {
@@ -19,12 +24,24 @@ export const ProductForm: React.FC<Props> = ({
   formTitle,
   buttonText,
 }) => {
-  console.log(productToEdit);
+  const [formState, setFormState] = useState<IProductForm>(
+    productToEdit || {
+      name: '',
+      price: 0,
+      description: '',
+      stock: 0,
+    }
+  );
+  const navigate = useNavigate();
+
+  const { isSavingProduct, onSaveProduct } = useSaveProduct();
 
   const handleSaveProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log('saving');
+    await onSaveProduct(formState);
+
+    navigate('/products');
   };
 
   return (
@@ -48,6 +65,8 @@ export const ProductForm: React.FC<Props> = ({
             name="name"
             id="name"
             placeholder="name"
+            value={formState.name}
+            onChange={(e) => setFormState({ ...formState, name: e.target.value })}
           />
         </div>
 
@@ -62,6 +81,10 @@ export const ProductForm: React.FC<Props> = ({
             name="price"
             id="price"
             placeholder="price"
+            value={formState.price}
+            onChange={(e) =>
+              setFormState({ ...formState, price: Number(e.target.value) })
+            }
           />
         </div>
 
@@ -79,6 +102,8 @@ export const ProductForm: React.FC<Props> = ({
             name="description"
             id="description"
             placeholder="description"
+            value={formState.description}
+            onChange={(e) => setFormState({ ...formState, description: e.target.value })}
           />
         </div>
 
@@ -93,15 +118,20 @@ export const ProductForm: React.FC<Props> = ({
             name="stock"
             id="stock"
             placeholder="stock"
+            value={formState.stock}
+            onChange={(e) =>
+              setFormState({ ...formState, stock: Number(e.target.value) })
+            }
           />
         </div>
       </div>
 
       <button
         type="submit"
+        disabled={isSavingProduct}
         className="w-full px-4 py-3 mt-6 font-sans text-lg font-semibold tracking-wide text-white transition-all bg-indigo-500 rounded hover:bg-indigo-600 disabled:opacity-50"
       >
-        {buttonText}
+        {isSavingProduct ? <LoadingSpinner size="sm" /> : <span>{buttonText}</span>}
       </button>
     </form>
   );

@@ -1,7 +1,25 @@
+import { useState } from 'react';
+
+import { useAuthStore } from '@/stores/auth.store';
+import { LoadingSpinner } from './LoadingSpinner';
+
+export interface ILoginForm {
+  email: string;
+  password: string;
+}
+
 export const LoginForm = () => {
+  const [formState, setFormState] = useState<ILoginForm>({
+    email: '',
+    password: '',
+  });
+
+  const { isLoggingIn, onLogin } = useAuthStore();
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('login');
+
+    onLogin(formState);
   };
 
   return (
@@ -25,6 +43,8 @@ export const LoginForm = () => {
             name="email"
             id="email"
             placeholder="@email"
+            value={formState.email}
+            onChange={(e) => setFormState({ ...formState, email: e.target.value })}
           />
         </div>
 
@@ -39,15 +59,18 @@ export const LoginForm = () => {
             name="password"
             id="password"
             placeholder="password"
+            value={formState.password}
+            onChange={(e) => setFormState({ ...formState, password: e.target.value })}
           />
         </div>
       </div>
 
       <button
         type="submit"
+        disabled={isLoggingIn}
         className="w-full px-4 py-3 mt-6 font-sans text-lg font-semibold tracking-wide text-white transition-all bg-indigo-500 rounded hover:bg-indigo-600 disabled:opacity-50"
       >
-        Login
+        {isLoggingIn ? <LoadingSpinner size='sm'/> : 'Login'}
       </button>
     </form>
   );

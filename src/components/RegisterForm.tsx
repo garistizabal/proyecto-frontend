@@ -1,9 +1,32 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { useRegister } from '@/hooks/useRegister';
+import { LoadingSpinner } from './LoadingSpinner';
+
+export interface IRegisterForm {
+  username: string;
+  email: string;
+  password: string;
+  isAdmin: boolean;
+}
 
 export const RegisterForm = () => {
+  const [formState, setFormState] = useState<IRegisterForm>({
+    username: '',
+    email: '',
+    password: '',
+    isAdmin: false,
+  });
+  const navigate = useNavigate();
+
+  const { isRegistering, onRegister } = useRegister();
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('register');
+    await onRegister(formState);
+
+    navigate('/login');
   };
 
   return (
@@ -27,6 +50,8 @@ export const RegisterForm = () => {
             name="username"
             id="username"
             placeholder="username"
+            value={formState.username}
+            onChange={(e) => setFormState({ ...formState, username: e.target.value })}
           />
         </div>
 
@@ -41,6 +66,8 @@ export const RegisterForm = () => {
             name="email"
             id="email"
             placeholder="@email"
+            value={formState.email}
+            onChange={(e) => setFormState({ ...formState, email: e.target.value })}
           />
         </div>
 
@@ -55,6 +82,8 @@ export const RegisterForm = () => {
             name="password"
             id="password"
             placeholder="password"
+            value={formState.password}
+            onChange={(e) => setFormState({ ...formState, password: e.target.value })}
           />
         </div>
 
@@ -62,6 +91,8 @@ export const RegisterForm = () => {
           <div className="flex items-center">
             <input
               type="checkbox"
+              onChange={(e) => setFormState({ ...formState, isAdmin: e.target.checked })}
+              checked={formState.isAdmin}
               className="border-gray-300 rounded size-4"
               id="isAdmin"
             />
@@ -73,9 +104,10 @@ export const RegisterForm = () => {
 
       <button
         type="submit"
+        disabled={isRegistering}
         className="w-full px-4 py-3 mt-6 font-sans text-lg font-semibold tracking-wide text-white transition-all bg-indigo-500 rounded hover:bg-indigo-600 disabled:opacity-50"
       >
-        Register
+        {isRegistering ? <LoadingSpinner size="sm" /> : 'Register'}
       </button>
     </form>
   );

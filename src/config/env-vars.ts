@@ -1,0 +1,1 @@
+export const PRODUCTS_API: string = import.meta.env.VITE_PRODUCTS_API;
